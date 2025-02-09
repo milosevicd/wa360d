@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     const body = await request.json();
     await cookieBasedClient.models.Webhook.create({
-        content: body,
+        content: JSON.stringify(body),
     });
     return NextResponse.json({ message: "OK" });
 }
