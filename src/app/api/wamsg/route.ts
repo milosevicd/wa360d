@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     const body = await request.json();
-    await cookieBasedClient.models.Webhook.create({
+    cookieBasedClient.mutations.newWaMsg({
         content: JSON.stringify(body),
     });
     return NextResponse.json({ message: "OK" });

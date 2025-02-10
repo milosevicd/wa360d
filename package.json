@@ -19,6 +19,7 @@
     "@aws-amplify/backend": "^1.14.0",
     "@aws-amplify/backend-cli": "^1.4.9",
     "@eslint/eslintrc": "^3",
+    "@types/aws-lambda": "^8.10.147",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
