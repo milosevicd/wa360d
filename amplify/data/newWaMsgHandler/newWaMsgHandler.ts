@@ -3,7 +3,7 @@ import type { PostConfirmationTriggerHandler } from "aws-lambda";
 import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
 import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtime';
-import { env } from "$amplify/env/newWaMsg";
+import { env } from "$amplify/env/newWaMsgHandler";
 
 const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(
   env as any

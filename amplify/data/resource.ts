@@ -6,8 +6,8 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
 and "delete" any "Todo" records.
 =========================================================================*/
-const newWaMsg = defineFunction({
-  entry: './newWaMsg/newWaMsg.ts'
+const newWaMsgHandler = defineFunction({
+  entry: './newWaMsgHandler/newWaMsgHandler.ts'
 });
 
 const schema = a.schema({
@@ -22,10 +22,10 @@ const schema = a.schema({
       .arguments({
         content: a.string().required(),
       })
-      .handler(a.handler.function(newWaMsg).async())
+      .handler(a.handler.function(newWaMsgHandler).async())
       .authorization((allow) => [allow.guest()]),
     
-});
+}).authorization((allow) => [allow.resource(newWaMsgHandler)]);
 
 export type Schema = ClientSchema<typeof schema>;
 

@@ -15,9 +15,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-    const body = await request.json();
-    cookieBasedClient.mutations.newWaMsg({
-        content: JSON.stringify(body),
+    const body = await request.text();
+    await cookieBasedClient.mutations.newWaMsg({
+        content: body,
     });
     return NextResponse.json({ message: "OK" });
 }
