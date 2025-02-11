@@ -1,5 +1,10 @@
-import { defineFunction } from '@aws-amplify/backend';
+import { defineFunction, secret } from '@aws-amplify/backend';
 
 export const newWaMsgHandler = defineFunction({
-    entry: './newWaMsgHandler.ts'
+    name: 'newWaMsgHandler',
+    entry: './handler.ts',
+    environment: {
+        ADMIN_USERNAME: secret('adminUsername'),
+        ADMIN_PASSWORD: secret('adminPassword'),
+    }
 });

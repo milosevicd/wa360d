@@ -5,37 +5,35 @@ import { generateClient } from "aws-amplify/data";
 import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtime';
 import { env } from "$amplify/env/newWaMsgHandler";
 import { CognitoIdentityProviderClient, AdminInitiateAuthCommand, AuthFlowType  } from "@aws-sdk/client-cognito-identity-provider"; // ES Modules import
+import { backend } from '../../backend';
+import { secret } from '@aws-amplify/backend';
 
 const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(
-  env as any
+  env
 );
 
 Amplify.configure(resourceConfig, libraryOptions);
-// buggysecr1A"
 
-
-export const handler: Schema["newWaMsg"]["functionHandler"] = async (event, context) => {
+export const handler: Schema["newWaMsg"]["functionHandler"] = async (event) => {
   const waMsg = JSON.parse(event.arguments.content);
 
-
-  const input = { // AdminInitiateAuthRequest
+  const initAuthCommand = new AdminInitiateAuthCommand({ 
     AuthFlow: AuthFlowType.ADMIN_NO_SRP_AUTH,
-    UserPoolId: "us-west-2_PF78dwosU", // required
-    ClientId: "7uq1j0kq8iqf3n89jt58hfgv6b", // required
-    AuthParameters: { // AuthParametersType
-      "USERNAME": "milosevic.d+360d3@gmail.com",
-      "PASSWORD": "RPu..PNuVQbPzr2",
+    UserPoolId: backend.auth.resources.userPool.userPoolId,
+    ClientId: backend.auth.resources.userPoolClient.userPoolClientId,
+    AuthParameters: {
+      "USERNAME": env.ADMIN_USERNAME,
+      "PASSWORD": env.ADMIN_PASSWORD,
     }
-  };
-  const command = new AdminInitiateAuthCommand(input);
+  });
 
-  const cognito = new CognitoIdentityProviderClient({});
-  const cognitoResponse = await cognito.send(command);
-  const accessToken = cognitoResponse.AuthenticationResult?.IdToken;
+  const cognitoClient = new CognitoIdentityProviderClient({});
+  const cognitoResponse = await cognitoClient.send(initAuthCommand);
+  const idToken = cognitoResponse.AuthenticationResult?.IdToken;
 
-  console.log("ACCESS TOKEN", accessToken);
+  console.log("ACCESS TOKEN", idToken);
 
-  const client = generateClient<Schema>({authMode: 'identityPool', authToken: accessToken});
+  const client = generateClient<Schema>({authMode: 'identityPool', authToken: idToken});
 
   const waId = waMsg.entry[0].changes[0].value.contacts[0].wa_id;
 

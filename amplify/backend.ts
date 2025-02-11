@@ -7,7 +7,7 @@ import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
  */
-const backend = defineBackend({
+export const backend = defineBackend({
   auth,
   data,
   newWaMsgHandler
