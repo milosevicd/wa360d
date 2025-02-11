@@ -1,4 +1,4 @@
-import type { Schema } from '../resource'
+import type { Schema } from '../../data/resource'
 import type { PostConfirmationTriggerHandler } from "aws-lambda";
 import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
@@ -6,7 +6,6 @@ import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtim
 import { env } from "$amplify/env/newWaMsgHandler";
 import { CognitoIdentityProviderClient, AdminInitiateAuthCommand, AuthFlowType  } from "@aws-sdk/client-cognito-identity-provider"; // ES Modules import
 import { backend } from '../../backend';
-import { secret } from '@aws-amplify/backend';
 
 const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(
   env
@@ -14,7 +13,7 @@ const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(
 
 Amplify.configure(resourceConfig, libraryOptions);
 
-export const handler: Schema["newWaMsg"]["functionHandler"] = async (event) => {
+export const handler: Schema["newWaMsgHandler"]["functionHandler"] = async (event) => {
   const waMsg = JSON.parse(event.arguments.content);
 
   const initAuthCommand = new AdminInitiateAuthCommand({ 

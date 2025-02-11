@@ -15,13 +15,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-
-
-
-
-
     const body = await request.text();
-    await cookieBasedClient.mutations.newWaMsg({
+    await cookieBasedClient.mutations.newWaMsgHandler({
         content: body,
     });
     return NextResponse.json({ message: "OK" });
@@ -29,17 +24,3 @@ export async function POST(request: NextRequest) {
 
 
 
-
-// sched function
-
-    // 1. fetch all convos
-
-    // 2. for each convo / user:
-
-        // fetch all convo().listMsgs()
-
-        // if not all convo msgs in DB.msgs:
-            // add them
-            // if last msg from user < 24h ago, wap.sendMsg(convo().lastMsg())
-
-    

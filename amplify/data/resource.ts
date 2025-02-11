@@ -1,6 +1,6 @@
 import { type ClientSchema, a, defineData, defineFunction } from '@aws-amplify/backend';
 import * as iam from "aws-cdk-lib/aws-iam"
-import { newWaMsgHandler } from './newWaMsgHandler/resource';
+import { newWaMsgHandler } from '../functions/newWaMsgHandler/resource';
 
 const schema = a.schema({
   User: a.model({
@@ -19,7 +19,7 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.guest(), allow.authenticated()]),
 
-  newWaMsg: a.mutation()
+  newWaMsgHandler: a.mutation()
       .arguments({
         content: a.string().required(),
       })
@@ -44,6 +44,6 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'userPool',
   }
 });
