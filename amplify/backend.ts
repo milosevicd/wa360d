@@ -30,3 +30,13 @@ backend.checkAiUpdates.resources.lambda.addToRolePolicy(
     resources: [`arn:aws:cognito-idp:*:*:userpool/*`],
   })
 );
+
+backend.auth.resources.cfnResources.cfnUserPool.policies = {
+  passwordPolicy: {
+    minimumLength: 7,
+    requireLowercase: false,
+    requireUppercase: false,
+    requireNumbers: false,
+    requireSymbols: false,
+  },
+};

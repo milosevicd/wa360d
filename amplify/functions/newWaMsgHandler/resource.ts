@@ -6,5 +6,6 @@ export const newWaMsgHandler = defineFunction({
     environment: {
         ADMIN_USERNAME: secret('adminUsername'),
         ADMIN_PASSWORD: secret('adminPassword'),
-    }
+    },
+    timeoutSeconds: 120
 });

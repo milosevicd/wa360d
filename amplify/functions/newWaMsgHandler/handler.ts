@@ -1,11 +1,10 @@
-import type { Schema } from '../../data/resource'
-import type { PostConfirmationTriggerHandler } from "aws-lambda";
+import { env } from "$amplify/env/newWaMsgHandler";
+import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtime';
+import { AdminInitiateAuthCommand, AuthFlowType, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider"; // ES Modules import
 import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
-import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtime';
-import { env } from "$amplify/env/newWaMsgHandler";
-import { CognitoIdentityProviderClient, AdminInitiateAuthCommand, AuthFlowType  } from "@aws-sdk/client-cognito-identity-provider"; // ES Modules import
 import { backend } from '../../backend';
+import type { Schema } from '../../data/resource';
 
 const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(
   env

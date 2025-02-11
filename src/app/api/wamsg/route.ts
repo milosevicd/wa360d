@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 const cookieBasedClient = generateServerClientUsingCookies<Schema>({
   config: outputs,
   cookies,
+  authMode: 'iam',
 });
 
 

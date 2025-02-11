@@ -51,30 +51,42 @@ export const handler: Handler = async () => {
   const client = generateClient<Schema>({authMode: 'identityPool', authToken: idToken});
 
 
-  const users = await client.models.User.list({limit: 250});
+  const {data: users, errors: usersErrors} = await client.models.User.list();
+  if (usersErrors) {
+    console.log("ERRORS 1.", usersErrors);
+    return;
+  }
   // create a map of convoId to user
   const convoIdToUser = new Map<string, string>();
-  for (const user of users.data) {
+  for (const user of users) {
     if (user.convoId) {
       convoIdToUser.set(user.convoId, user.id);
     }
   }
 
 
-  const convos = await client.conversations.waChat.list({limit: 250});
+  const {data: convos, errors: convosErrors} = await client.conversations.waChat.list();
+  if (convosErrors) {
+    console.log("ERRORS 2.", convosErrors);
+    return;
+  }
 
-  for (const convo of convos.data) {
+  for (const convo of convos) {
     const userWaId = convoIdToUser.get(convo.id);
     if (!userWaId) {
       continue;
     }
 
-    const msgs = await convo.listMessages({limit: 1000});
-    for (const msg of msgs.data) {
+    const {data: msgs, errors: msgsErrors} = await convo.listMessages();
+    if (msgsErrors) {
+      console.log("ERRORS 3.", msgsErrors);
+      return;
+    }
+    for (const msg of msgs) {
       // check if msg in DB
-      const { errors, data: dbMsg } = await client.models.Message.get({id: msg.id});
-      if (errors) {
-        console.log("ERRORS 1.", errors);
+      const {errors: dbMsgErrors, data: dbMsg} = await client.models.Message.get({id: msg.id});
+      if (dbMsgErrors) {
+        console.log("ERRORS 4.", dbMsgErrors);
         return;
       }
       if (!dbMsg) {
@@ -82,11 +94,10 @@ export const handler: Handler = async () => {
           waId: userWaId,
           messageId: msg.id,
           text: msg.content[0].text || '',
-          timestamp: parseInt(msg.createdAt),
-          source: 'user'
+          timestamp: new Date(msg.createdAt).getTime() / 1000,
+          source: 'AI'
         });
       }
-      // if not, add it
       // if last msg from user < 24h ago, wap.sendMsg(convo().lastMsg())
     }
   }
