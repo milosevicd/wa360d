@@ -20,8 +20,8 @@ export const handler: Schema["newWaMsg"]["functionHandler"] = async (event, cont
 
   const input = { // AdminInitiateAuthRequest
     AuthFlow: AuthFlowType.ADMIN_NO_SRP_AUTH,
-    UserPoolId: "us-west-2_fUuxzcMKO", // required
-    ClientId: "3vbmm66gtpfl0v6etvst497o97", // required
+    UserPoolId: "us-west-2_PF78dwosU", // required
+    ClientId: "7uq1j0kq8iqf3n89jt58hfgv6b", // required
     AuthParameters: { // AuthParametersType
       "USERNAME": "milosevic.d+360d3@gmail.com",
       "PASSWORD": "RPu..PNuVQbPzr2",
