@@ -1,4 +1,6 @@
 import { type ClientSchema, a, defineData, defineFunction } from '@aws-amplify/backend';
+import * as iam from "aws-cdk-lib/aws-iam"
+import { newWaMsgHandler } from './newWaMsgHandler/resource';
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -6,9 +8,15 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
 and "delete" any "Todo" records.
 =========================================================================*/
-const newWaMsgHandler = defineFunction({
-  entry: './newWaMsgHandler/newWaMsgHandler.ts'
-});
+
+
+
+const statement = new iam.PolicyStatement({
+  sid: "AllowAccessToCognito",
+  actions: ["cognito-idp:AdminInitiateAuth"],
+  resources: ["arn:aws:cognito-idp:us-west-2:123456789012:userpool/us-west-2_fUuxzcMKO"],
+})
+
 
 const schema = a.schema({
   User: a.model({
@@ -16,7 +24,7 @@ const schema = a.schema({
       name: a.string().required(),
       convoId: a.string()
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.guest(), allow.authenticated()]),
 
   Message: a.model({
       waId: a.string().required(),
@@ -25,14 +33,14 @@ const schema = a.schema({
       timestamp: a.timestamp().required(),
       source: a.enum(['user', 'AI']),
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.guest(), allow.authenticated()]),
 
   newWaMsg: a.mutation()
       .arguments({
         content: a.string().required(),
       })
       .handler(a.handler.function(newWaMsgHandler).async())
-      .authorization((allow) => [allow.guest()]),
+      .authorization((allow) => [allow.guest(), allow.authenticated()]),
 
   waChat: a.conversation({
       aiModel: a.ai.model('Claude 3 Haiku'),
@@ -44,6 +52,8 @@ const schema = a.schema({
     
     
 }).authorization((allow) => [allow.resource(newWaMsgHandler)]);
+
+
 
 export type Schema = ClientSchema<typeof schema>;
 
