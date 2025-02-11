@@ -1,6 +1,7 @@
 import { type ClientSchema, a, defineData, defineFunction } from '@aws-amplify/backend';
 import * as iam from "aws-cdk-lib/aws-iam"
 import { newWaMsgHandler } from '../functions/newWaMsgHandler/resource';
+import { checkAiUpdates } from '../functions/checkAiUpdates/resource';
 
 const schema = a.schema({
   User: a.model({
@@ -25,6 +26,10 @@ const schema = a.schema({
       })
       .handler(a.handler.function(newWaMsgHandler).async())
       .authorization((allow) => [allow.guest(), allow.authenticated()]),
+
+  checkAiUpdates: a.mutation()
+    .handler(a.handler.function(checkAiUpdates).async())
+    .authorization((allow) => [allow.guest(), allow.authenticated()]),
 
   waChat: a.conversation({
       aiModel: a.ai.model('Claude 3 Haiku'),

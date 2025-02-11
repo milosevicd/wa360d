@@ -7,5 +7,5 @@ export const checkAiUpdates = defineFunction({
         ADMIN_USERNAME: secret('adminUsername'),
         ADMIN_PASSWORD: secret('adminPassword'),
     },
-    schedule: "every 1m"
+    // schedule: "every 1m"
 });
