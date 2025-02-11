@@ -15,6 +15,9 @@ export const backend = defineBackend({
   checkAiUpdates
 });
 
+backend.newWaMsgHandler.addEnvironment('USER_POOL_ID', backend.auth.resources.userPool.userPoolId);
+backend.newWaMsgHandler.addEnvironment('USER_POOL_CLIENT_ID', backend.auth.resources.userPoolClient.userPoolClientId);
+
 backend.newWaMsgHandler.resources.lambda.addToRolePolicy(
   new PolicyStatement({
     effect: Effect.ALLOW,

@@ -14,11 +14,11 @@ Amplify.configure(resourceConfig, libraryOptions);
 
 export const handler: Schema["newWaMsgHandler"]["functionHandler"] = async (event) => {
   const waMsg = JSON.parse(event.arguments.content);
-
+  
   const initAuthCommand = new AdminInitiateAuthCommand({ 
     AuthFlow: AuthFlowType.ADMIN_NO_SRP_AUTH,
-    UserPoolId: backend.auth.resources.userPool.userPoolId,
-    ClientId: backend.auth.resources.userPoolClient.userPoolClientId,
+    UserPoolId: env.USER_POOL_ID,
+    ClientId: env.USER_POOL_CLIENT_ID,
     AuthParameters: {
       "USERNAME": env.ADMIN_USERNAME,
       "PASSWORD": env.ADMIN_PASSWORD,
